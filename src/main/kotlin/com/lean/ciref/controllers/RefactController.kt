@@ -2,27 +2,22 @@ package com.lean.ciref.controllers
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
-import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
+import com.lean.ciref.DTO.DetectAllReq
+import com.lean.ciref.DTO.DetectBetweenCommits
+import com.lean.ciref.DTO.DetectCommitReq
 import com.lean.ciref.entities.Refact
+import org.eclipse.jgit.util.FileUtils
 import org.refactoringminer.api.GitHistoryRefactoringMiner
 import org.refactoringminer.api.GitService
 import org.refactoringminer.api.Refactoring
 import org.refactoringminer.api.RefactoringHandler
 import org.refactoringminer.rm1.GitHistoryRefactoringMinerImpl
 import org.refactoringminer.util.GitServiceImpl
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import com.lean.ciref.DTO.DetectAllReq
-import com.lean.ciref.DTO.DetectBetweenCommits
-import com.lean.ciref.DTO.DetectCommitReq
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.nio.file.Paths
 import java.util.*
+
 
 @RestController
 class RefactController {
@@ -60,9 +55,12 @@ class RefactController {
                     }
                 }
             }
-        })
+        });
+        repo.close()
         var tutorials: Array<Refact> = gson.fromJson(refacts.toString(), arrayTutorialType)
+        val dir = Paths.get ("./tmp");
 
+        FileUtils.delete(dir.toFile(),1);
         return tutorials
     }
 
